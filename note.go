@@ -15,6 +15,7 @@ var USAGE = `USAGE: note [subcommand [args]]
     subcommands: 
         * new : add the args to the notes for today
         * today : print today's notes
+        * ls : print the dates of previous notes
         * <YYYY.MM.DD> : print the notes from the given date
     
 As a bare command, note will read from stdin and add to today's note.
@@ -49,6 +50,24 @@ func ReadNote(date string) {
 	fmt.Println(string(notes))
 }
 
+// ListNotes prints a listing of notes
+func ListNotes() {
+	f, err := os.Open(os.Getenv("NOTES_HOME"))
+	if err != nil {
+		FatalPrintln("ERROR: could not get notes listing: ", err)
+	}
+	defer f.Close()
+	list, err := f.Readdirnames(-1)
+	if err != nil {
+		FatalPrintln("ERROR: could not get notes listing: ", err)
+	}
+
+	fmt.Println("NOTES:")
+	for _, name := range list {
+		fmt.Println(name)
+	}
+}
+
 func main() {
 	subcommand := os.Args
 	notesHomeDir := os.Getenv("NOTES_HOME")
@@ -73,6 +92,8 @@ func main() {
 			}
 		case "today":
 			ReadNote(date)
+		case "ls":
+			ListNotes()
 		default:
 			if _, err := time.Parse("2006.01.02", subcommand[1]); err != nil {
 				fmt.Println(USAGE)
