@@ -2,7 +2,9 @@
 a simple command line tool for simple note taking
 
 ## installation
-`go get -u github.com/reesporte/note && go install github.com/reesporte/note@latest`
+```
+go install -v github.com/reesporte/note@latest
+```
 
 ## usage
 set `$NOTES_HOME` to the directory you wish to store your notes in, then `note [subcommand [args]]`.
